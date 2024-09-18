@@ -5,7 +5,7 @@ services:
     build: .
     working_dir: /usr/src/app
     volumes:
-      - .:/usr/src/app
+      - ./:/usr/src/app
     environment:
       - MONGO_URI=mongodb+srv://samuelzentou:ALXw7u95CEm6k4ZC@cluster0.zylx2ez.mongodb.net/RetroMetroidApp
     ports:

@@ -1,5 +1,5 @@
 # Utiliser une image de base officielle pour Node.js
-FROM node:16
+FROM node:lts
 
 # Définir le répertoire de travail dans le conteneur
 WORKDIR /usr/src/app
@@ -11,7 +11,7 @@ COPY package*.json ./
 COPY .env ./
 
 # Installer les dépendances
-RUN npm install
+RUN yarn install
 
 # Copier le reste du code de l'application dans le conteneur
 COPY . .
