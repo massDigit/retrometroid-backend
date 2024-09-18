@@ -15,12 +15,18 @@ const __dirname = dirname(__filename);
 
 
 import './models/connection.js'; 
-//import indexRouter from './routes/index.js';
+import indexRouter from './routes/index.js';
 import usersRouter from './routes/users.js';
+import optionsRouter from './routes/options.js';
+import productsRouter from './routes/products.js';
+import colorRouter from './routes/colors.js';
+
 
 const app = express();
 const log = morgan("dev");
 const port = process.env.PORT
+
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -32,8 +38,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-//app.use('/', indexRouter);
+app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/options', optionsRouter);
+app.use('/products', productsRouter);
+app.use('/colors',colorRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
