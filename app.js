@@ -21,7 +21,7 @@ import optionsRouter from './routes/options.js';
 import productsRouter from './routes/products.js';
 import colorRouter from './routes/colors.js';
 import accessorieRouter from './routes/accessories.js';
-
+import categoryRouter from './routes/categories.js';
 
 const app = express();
 const log = morgan("dev");
@@ -45,6 +45,8 @@ app.use('/options', optionsRouter);
 app.use('/products', productsRouter);
 app.use('/colors',colorRouter);
 app.use('/accessories',accessorieRouter);
+app.use('/categories',categoryRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -5,13 +5,13 @@ import Product from '../models/product.js';
 import Accessorie from '../models/accessories.js';
 import Option from '../models/options.js';
 import checkBody from '../modules/checkBody.js';  
-
+import Category from '../models/categories.js';
 
 router.post('/addProduct',async(req,res)=>{
  
 try {
         const requireBody = ["name","type"];
-        const { name,type,accessories, options } = req.body;
+        const { name,type,accessories, options,stockQuantity } = req.body;
 
         if (!checkBody(req.body, requireBody)) {
             return res.json({ result: false, error: "Missing or empty fields" });
@@ -21,6 +21,13 @@ try {
 
         if(existingProduct){
             return res.json({result:"false", error: "product already exist"})  
+        }
+
+
+        const category = await Category.findOne({name:req.body.category})
+
+        if (!category){
+          res.json({result:false,error:'category not found'})
         }
 
         const accessoriesArray  = await Accessorie.find({ name: { $in: accessories } })
@@ -40,6 +47,8 @@ try {
             description : req.body.description,
             price : req.body.price,
             type,
+            stockQuantity,
+            category:category._id,
             accessories: accessoriesArray.map(accessory => accessory._id),
             options: optionsArray.map(option => option._id),
         })
@@ -58,7 +67,8 @@ router.get('/',async(req,res)=>{
     try{
         const products = await Product.find()
         .populate('options') // Peupler les options avec toutes les informations
-        .populate('accessories');
+        .populate('accessories')
+        .populate('category');
        
          if(products.length > 0 ){
            return res.status(200).json({result :true, allProduct : products})

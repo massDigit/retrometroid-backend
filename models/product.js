@@ -1,6 +1,7 @@
 
 import mongoose from 'mongoose'
 
+
 const productSchema = mongoose.Schema({
       name: {
         type: String,
@@ -16,11 +17,21 @@ const productSchema = mongoose.Schema({
       type: {
         type: String,
       },
+      stockQuantity:{
+        type:Number,
+      },
+      category:[
+        {type: mongoose.Schema.Types.ObjectId, ref : 'categories'}
+      ],
       options:
-        [{type: mongoose.Schema.Types.ObjectId, ref : 'options'}]
+        [
+          {type: mongoose.Schema.Types.ObjectId, ref : 'options'}
+        ]
       ,
       accessories:
-        [{type: mongoose.Schema.Types.ObjectId, ref : 'accessories'}]
+        [
+          {type: mongoose.Schema.Types.ObjectId, ref : 'accessories'}
+        ]
       
   
 });
