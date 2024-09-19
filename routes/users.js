@@ -1,29 +1,26 @@
-var express = require('express');
-var router = express.Router();
+import express from 'express';
+const router = express.Router();
 
-const { checkBody } = require("../modules/checkBody");
+import checkBody from '../modules/checkBody.js';  
+import jwt from 'jsonwebtoken'; 
+import uid2 from 'uid2'; 
+import bcrypt from 'bcrypt';  
 
-const jwt = require("jsonwebtoken");
-const uid2 = require("uid2");
-const secretKey = uid2(32);
+import User from '../models/users.js';  
 
-const refrechSecretKey = uid2(32);
-
-const moment = require("moment");
-
-const bcrypt = require("bcrypt");
-
-const User = require('../models/users'); 
+const secretKey = uid2(32);  
+const refreshSecretKey = uid2(32);
 
 
 const generateAccessToken = (payload) => {
-  console.log("test")
   return jwt.sign(payload, secretKey, { expiresIn: '15m' }); // 15 minutes
 };
 
 const generateRefreshToken = () => {
-  return jwt.sign({}, refrechSecretKey, { expiresIn: '7d' }); // 7 jours
+  return jwt.sign({}, refreshSecretKey, { expiresIn: '7d' }); // 7 jours
 };
+
+
 
 
 /* GET users listing. */
@@ -110,8 +107,8 @@ router.post('/login', async (req, res) => {
 
     // Génération des tokens après une connexion réussie
     const payload = { username: user.username, email: user.email };
-    const accessToken = generateAccessToken(payload);  // Durée de vie courte
-    const refreshToken = generateRefreshToken();  // Durée de vie longue
+    const accessToken = generateAccessToken(payload);  // Durée de vie 15 min
+    const refreshToken = generateRefreshToken();  // Durée de vie 7 jours
 
     // Stockage du refresh token dans la base de données
     user.refreshToken = refreshToken;
@@ -131,5 +128,10 @@ router.post('/login', async (req, res) => {
 });
 
 
+router.get('/',async(req,res)=>{
 
-module.exports = router;
+})
+
+
+
+export default router;
