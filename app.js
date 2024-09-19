@@ -1,24 +1,39 @@
-require('dotenv').config();
+import dotenv from 'dotenv';
+dotenv.config();
+
+import createError from 'http-errors';
+import express from 'express';
+import path , {dirname } from 'path';
+import cookieParser from 'cookie-parser';
+import morgan from 'morgan';
+import http from 'http';
+import { fileURLToPath } from 'url';
 
 
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
-require('./models/connection');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+import './models/connection.js'; 
+import indexRouter from './routes/index.js';
+import usersRouter from './routes/users.js';
+import optionsRouter from './routes/options.js';
+import productsRouter from './routes/products.js';
+import colorRouter from './routes/colors.js';
+import accessorieRouter from './routes/accessories.js';
 
-var app = express();
+
+const app = express();
+const log = morgan("dev");
+const port = process.env.PORT
+
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-app.use(logger('dev'));
+app.use(log);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -26,10 +41,20 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/options', optionsRouter);
+app.use('/products', productsRouter);
+app.use('/colors',colorRouter);
+app.use('/accessories',accessorieRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
+});
+
+const server = http.createServer(app);
+
+server.listen(port, () => {
+  console.log(`Server running on http://localhost:${port}`);
 });
 
 // error handler
@@ -43,4 +68,4 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-module.exports = app;
+export default app;
