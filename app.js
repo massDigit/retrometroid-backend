@@ -20,6 +20,7 @@ import usersRouter from './routes/users.js';
 import optionsRouter from './routes/options.js';
 import productsRouter from './routes/products.js';
 import colorRouter from './routes/colors.js';
+import accessorieRouter from './routes/accessories.js';
 
 
 const app = express();
@@ -43,6 +44,7 @@ app.use('/users', usersRouter);
 app.use('/options', optionsRouter);
 app.use('/products', productsRouter);
 app.use('/colors',colorRouter);
+app.use('/accessories',accessorieRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

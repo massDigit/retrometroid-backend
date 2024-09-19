@@ -6,6 +6,25 @@ import checkBody from '../modules/checkBody.js';
 
 
 
+
+router.get('/',async(req,res)=>{
+    
+    try{
+      Color.find()
+   .then(data=>{
+     if(data.length > 0 ){
+         return res.status(200).json({result : true , allColor:data })
+     }
+     return res.status(404).json({result:false, error:"no color Found"})
+   })
+    }catch(error) {
+     res.status(500).json({ result: "false", error: "Server error" });
+ }
+  
+ 
+ })
+
+
 router.post('/addColor',async(req,res)=>{
  
     try {
@@ -37,6 +56,7 @@ router.post('/addColor',async(req,res)=>{
     }
  
 })
+
 
 
 export default router;

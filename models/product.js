@@ -16,12 +16,12 @@ const productSchema = mongoose.Schema({
       type: {
         type: String,
       },
-      option:[
+      options:
         [{type: mongoose.Schema.Types.ObjectId, ref : 'options'}]
-      ],
-      accessorie:[
-        [{type: mongoose.Schema.Types.ObjectId, ref : 'accessorie'}]
-      ]
+      ,
+      accessories:
+        [{type: mongoose.Schema.Types.ObjectId, ref : 'accessories'}]
+      
   
 });
 
