@@ -5,6 +5,8 @@ import Color from '../models/colors.js';
 import Option from '../models/options.js';
 import checkBody from '../modules/checkBody.js';  
 
+
+
 router.get('/',async(req,res)=>{
   try{
     Option.find()
@@ -22,10 +24,12 @@ router.get('/',async(req,res)=>{
 
 router.post('/addOptions',async(req,res)=>{
  
-  try {
+
+
+ try {
           
-      const { name, description, price, imagePath, color: colorName } = req.body;
-      const requireBody = ["name", "description", "imagePath","color"];
+      const { name, description,imagePathFront,imagePathSide,imagePathBack, color: colorName } = req.body;
+      const requireBody = ["name", "description", "imagePathSide","imagePathFront","imagePathBack","color"];
 
       if (!checkBody(req.body, requireBody)) {
         return res.json({ result: false, error: "Missing or empty fields" });
@@ -43,13 +47,16 @@ router.post('/addOptions',async(req,res)=>{
       if (!color) {
           return res.status(404).json({ result: "false", error: "Color not found" });
         }
-      const  optionImgUrl = `/images/ASSETS/${imagePath}`;
+      const  optionImgFront = `/images/ASSETS/${imagePathFront}`;
+      const  optionImgSide = `/images/ASSETS/${imagePathSide}`;
+      const  optionImgBack = `/images/ASSETS/${imagePathBack}`;
 
       const newOption = new Option({
           name ,
           description ,
-          price ,
-          optionImgUrl,
+          optionImgFront,
+          optionImgSide,
+          optionImgBack,
           color: color._id
       })
 
@@ -62,9 +69,6 @@ router.post('/addOptions',async(req,res)=>{
     }
  
 })
-
-
-
 
 
 export default router;

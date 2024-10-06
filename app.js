@@ -3,6 +3,7 @@ dotenv.config();
 
 import createError from 'http-errors';
 import express from 'express';
+import cors from 'cors';
 import path , {dirname } from 'path';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
@@ -28,12 +29,20 @@ const log = morgan("dev");
 const port = process.env.PORT
 
 
+const corsOptions = {
+  origin: 'http://localhost:3001', // L'origine autorisée (peut être modifiée)
+  methods: 'GET,POST,PUT,DELETE', // Méthodes HTTP autorisées
+  allowedHeaders: 'Content-Type,Authorization', // En-têtes autorisés
+};
+
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 app.use(log);
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());

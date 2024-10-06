@@ -20,18 +20,17 @@ const productSchema = mongoose.Schema({
       stockQuantity:{
         type:Number,
       },
-      category:[
-        {type: mongoose.Schema.Types.ObjectId, ref : 'categories'}
-      ],
-      options:
-        [
-          {type: mongoose.Schema.Types.ObjectId, ref : 'options'}
-        ]
-      ,
-      accessories:
-        [
-          {type: mongoose.Schema.Types.ObjectId, ref : 'accessories'}
-        ]
+      category:[{type: mongoose.Schema.Types.ObjectId, ref : 'categories'}],
+      coque:[{type: mongoose.Schema.Types.ObjectId, ref : 'options'}],
+      button:[{type: mongoose.Schema.Types.ObjectId, ref : 'options'}],
+      pads:[{type: mongoose.Schema.Types.ObjectId, ref : 'options'}],
+      laniere:[{type: mongoose.Schema.Types.ObjectId, ref : 'options'}],
+      stickers:[{type: mongoose.Schema.Types.ObjectId, ref : 'options'}],
+      batterie:[{type: mongoose.Schema.Types.ObjectId, ref : 'options'}],
+      screen:[{type: mongoose.Schema.Types.ObjectId, ref : 'options'}],
+      sacoche: [{type: mongoose.Schema.Types.ObjectId, ref : 'accessories'}],
+      screen_shield: [{type: mongoose.Schema.Types.ObjectId, ref : 'accessories'}],
+      silicone_shield:[{type: mongoose.Schema.Types.ObjectId, ref : 'accessories'}]
       
   
 });
