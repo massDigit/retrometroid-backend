@@ -5,13 +5,6 @@ import Accessorie from '../models/accessories.js';
 import checkBody from '../modules/checkBody.js';  
 
 
-
-// Exécuter la fonction pour ajouter les accessoires
-
-
-
-
-
 router.post('/addAccessorie',async(req,res)=>{
 
   try {

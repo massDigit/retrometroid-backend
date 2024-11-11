@@ -29,6 +29,10 @@ const log = morgan("dev");
 const port = process.env.PORT
 
 
+console.log('Serving images from:', path.join(__dirname, '../../retrometroid-backend/public/images'));
+app.use('/images', express.static(path.join(__dirname, '../../retrometroid-backend/public/images')));
+
+
 const corsOptions = {
   origin: 'http://localhost:3001', // L'origine autorisée (peut être modifiée)
   methods: 'GET,POST,PUT,DELETE', // Méthodes HTTP autorisées

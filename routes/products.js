@@ -4,7 +4,6 @@ import Product from '../models/product.js';
 import Option from '../models/options.js';
 import Accessorie from '../models/accessories.js';
 import Color from '../models/colors.js';
-import categorie from '../models/categories.js'
 import checkBody from '../modules/checkBody.js';
 import Category from '../models/categories.js';
 

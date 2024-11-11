@@ -23,13 +23,11 @@ router.get('/',async(req,res)=>{
 })
 
 router.post('/addOptions',async(req,res)=>{
- 
-
 
  try {
           
-      const { name, description,imagePathFront,imagePathSide,imagePathBack, color: colorName } = req.body;
-      const requireBody = ["name", "description", "imagePathSide","imagePathFront","imagePathBack","color"];
+      const { name, description,type,imagePathFront,imagePathSide,imagePathBack, color: colorName } = req.body;
+      const requireBody = ["name", "description","type", "imagePathSide","imagePathFront","imagePathBack","color"];
 
       if (!checkBody(req.body, requireBody)) {
         return res.json({ result: false, error: "Missing or empty fields" });
@@ -54,6 +52,7 @@ router.post('/addOptions',async(req,res)=>{
       const newOption = new Option({
           name ,
           description ,
+          type,
           optionImgFront,
           optionImgSide,
           optionImgBack,
