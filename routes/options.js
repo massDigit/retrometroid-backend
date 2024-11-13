@@ -70,4 +70,28 @@ router.post('/addOptions',async(req,res)=>{
 })
 
 
+
+router.get('/getOptionsByConsoleType',async (req, res) => {
+
+  const { consoleType } = req.query;
+
+  if (!consoleType) {
+    return res.status(400).json({ error: 'Type manquant' });
+  }
+
+  try {
+    
+    const options = await Option.find({ consoleType: consoleType.toString() });
+
+    if (options.length === 0) {
+      return res.status(404).json({ error: 'Aucune option trouvée pour ce type' });
+    }
+
+    return res.status(200).json(options);
+  } catch (error) {
+    console.error('Erreur lors de la récupération des options:', error);
+    return res.status(500).json({ error: 'Erreur serveur' });
+  }
+});
+
 export default router;

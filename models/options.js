@@ -4,6 +4,7 @@ const optionSchema = mongoose.Schema({
   name : String,
   description : String,
   type : String,
+  consoleType : String,
   color : [{type: mongoose.Schema.Types.ObjectId, ref : 'colors'}],
   optionImgFront: { type: String },  // Image de face
   optionImgBack: { type: String },   // Image de dos
