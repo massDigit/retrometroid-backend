@@ -81,7 +81,7 @@ router.get('/getOptionsByConsoleType',async (req, res) => {
 
   try {
     
-    const options = await Option.find({ consoleType: consoleType.toString() });
+    const options = await Option.find({ consoleType: consoleType.toString() }).populate({ path: 'color', select: 'name -_id'  });
 
     if (options.length === 0) {
       return res.status(404).json({ error: 'Aucune option trouvée pour ce type' });
