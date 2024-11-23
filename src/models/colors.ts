@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-const colorSchema = mongoose.Schema({
+const colorSchema = new mongoose.Schema({
   name : String,
 });
 

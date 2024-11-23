@@ -1,4 +1,4 @@
-import express from 'express';
+import express,{Request,Response} from 'express';
 const router = express.Router();
 
 import Color from '../models/colors.js';
@@ -22,7 +22,7 @@ router.get('/',async(req,res)=>{
   }
 })
 
-router.post('/addOptions',async(req,res)=>{
+router.post('/addOptions',async(req:Request,res:Response):Promise<void>=>{
 
  try {
           
@@ -48,24 +48,28 @@ router.post('/addOptions',async(req,res)=>{
   ];
        
       if (!checkBody(req.body, requireBody)) {
-        return res.json({ result: false, error: "Missing or empty fields" });
+        res.status(400).json({ result: false, error: "Missing or empty fields" });
+        return 
       }
 
       if (typeof price !== "number" || isNaN(price) || price < 0) {
-        return res.status(400).json({ result: false, error: "Le prix doit être un nombre positif ou égal à zéro" });
+        res.status(400).json({ result: false, error: "Le prix doit être un nombre positif ou égal à zéro" });
+        return 
       }
 
       const existingOption = await Option.findOne({name:req.body.name});
 
       if(existingOption){
-          return res.status(400).json({result:"false", error: "Accessorie already exist"})  
+        res.status(409).json({result:"false", error: "Accessorie already exist"}) 
+        return  
       }
 
       const color = await Color.findOne({name:colorName})
       
       
       if (!color) {
-          return res.status(404).json({ result: "false", error: "Color not found" });
+        res.status(404).json({ result: "false", error: "Color not found" });
+          return 
         }
         const optionImgFront = imagePathFront ? `/images/ASSETS/${imagePathFront}` : "";
         const optionImgSide = imagePathSide ? `/images/ASSETS/${imagePathSide}` : "";
@@ -95,12 +99,13 @@ router.post('/addOptions',async(req,res)=>{
 
 
 
-router.get('/getOptionsByConsoleType',async (req, res) => {
+router.get('/getOptionsByConsoleType',async (req:Request,res:Response):Promise<void>=> {
 
   const { consoleType } = req.query;
 
   if (!consoleType) {
-    return res.status(400).json({ error: 'Type manquant' });
+    res.status(400).json({ error: 'Type manquant' });
+    return 
   }
 
   try {
@@ -108,13 +113,17 @@ router.get('/getOptionsByConsoleType',async (req, res) => {
     const options = await Option.find({ consoleType: consoleType.toString() }).populate({ path: 'color', select: 'name -_id'  });
 
     if (options.length === 0) {
-      return res.status(404).json({ error: 'Aucune option trouvée pour ce type' });
+      res.status(404).json({ error: 'Aucune option trouvée pour ce type' });
+      return 
     }
+      
+    res.status(200).json(options);
 
-    return res.status(200).json(options);
+    return 
   } catch (error) {
     console.error('Erreur lors de la récupération des options:', error);
-    return res.status(500).json({ error: 'Erreur serveur' });
+    res.status(500).json({ error: 'Erreur serveur' });
+    return 
   }
 });
 

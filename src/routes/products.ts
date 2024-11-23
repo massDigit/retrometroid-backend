@@ -1,4 +1,5 @@
-import express from 'express';
+import express,{Request,Response} from 'express';
+
 
 import Product from '../models/product.js';
 import Option from '../models/options.js';
@@ -34,7 +35,7 @@ const validateAccessoriesByName = async (accessoriesNames) => {
   return accessories.map(accessory => accessory._id);
 };
 
-router.post('/addProduct', async (req, res) => {
+router.post('/addProduct', async (req:Request,res:Response):Promise<void>=> {
   try {
     const {
       name,
@@ -70,13 +71,15 @@ router.post('/addProduct', async (req, res) => {
     // Validation des champs obligatoires
     const requireBody = ['name', 'price', 'type'];
     if (!checkBody(req.body, requireBody)) {
-      return res.status(400).json({ result: false, error: 'Missing or empty fields' });
+      res.status(400).json({ result: false, error: 'Missing or empty fields' })
+      return ;
     }
 
     // Vérification de l'existence du produit
     const existingProduct = await Product.findOne({ name });
     if (existingProduct) {
-      return res.status(400).json({ result: false, error: 'Product already exists' });
+      res.status(409).json({ result: false, error: 'Product already exists' })
+      return ;
     }
 
     const Categorie = await Category.findOne({categorie});
@@ -126,7 +129,7 @@ router.post('/addProduct', async (req, res) => {
   }
 });
 
-router.get('/',async(req,res)=>{
+router.get('/',async(req:Request,res:Response):Promise<void>=>{
     try{
         const products = await Product.find()
         .populate({
@@ -177,9 +180,11 @@ router.get('/',async(req,res)=>{
         .populate('category');
        
          if(products.length > 0 ){
-           return res.status(200).json({result :true, allProduct : products})
+          res.status(200).json({result :true, allProduct : products})
+           return 
          }
-         return res.status(404).json({result : false , error : "product not found"})
+         res.status(404).json({result : false , error : "product not found"})
+         return 
        
       }catch(error) {
         console.error("Error in fetching products:", error);

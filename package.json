@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "node app.js",
+    "start": "node dist/app.js",
     "test": "jest"
   },
   "dependencies": {
@@ -22,7 +22,15 @@
     "uid2": "^1.0.0"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/cookie-parser": "^1.4.7",
+    "@types/cors": "^2.8.17",
+    "@types/dotenv": "^6.1.1",
+    "@types/express": "^5.0.0",
+    "@types/http-errors": "^2.0.4",
     "@types/jsonwebtoken": "^9.0.7",
+    "@types/mongoose": "^5.11.96",
+    "@types/morgan": "^1.9.9",
     "jest": "^29.7.0",
     "typescript": "^5.7.2"
   }

@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-const optionSchema = mongoose.Schema({
+const optionSchema = new mongoose.Schema({
   name : String,
   description : String,
   type : String,

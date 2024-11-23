@@ -1,14 +1,15 @@
-import express from 'express';
-import fetch from 'node-fetch';
+import express,{Request,Response} from 'express';
+
 
 const router = express.Router();
 
-router.post('/proxy/woocommerce', async (req, res) => {
+router.post('/proxy/woocommerce', async (req:Request,res:Response):Promise<void> => {
   const orderData = req.body;
 
   // Valider les product_id avant d'envoyer la requête
   if (!orderData.line_items.every(item => typeof item.product_id === 'number' && item.product_id > 0)) {
-    return res.status(400).json({ error: 'Invalid product_id in line_items' });
+    res.status(400).json({ error: 'Invalid product_id in line_items' });
+    return 
   }
 
   const consumerKey = "ck_bb8f230364904539050fff1a5b157f7378a00949";
@@ -30,14 +31,17 @@ router.post('/proxy/woocommerce', async (req, res) => {
    
     if (!response.ok) {
       console.error('Erreur lors de la création de la commande WooCommerce:', responseData);
-      return res.status(response.status).json(responseData);
+      res.status(response.status).json(responseData);
+      return 
     }
 
     console.log('Commande créée avec succès:', responseData);
-    return res.status(200).json(responseData);
+    res.status(200).json(responseData);
+    return 
   } catch (error) {
     console.error('Erreur lors de la requête vers WooCommerce:', error);
-    return res.status(500).json({ error: 'Erreur serveur' });
+    res.status(500).json({ error: 'Erreur serveur' });
+    return 
   }
 });
 
