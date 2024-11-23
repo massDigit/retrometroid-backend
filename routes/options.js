@@ -26,11 +26,33 @@ router.post('/addOptions',async(req,res)=>{
 
  try {
           
-      const { name, description,type,imagePathFront,imagePathSide,imagePathBack, color: colorName } = req.body;
-      const requireBody = ["name", "description","type", "imagePathSide","imagePathFront","imagePathBack","color"];
+  const {
+    name,
+    description,
+    type,
+    consoleType,
+    price,
+    imagePathFront,
+    imagePathSide,
+    imagePathBack,
+    color: colorName,
+  } = req.body;
 
+  const requireBody = [
+    'name',
+    'description',
+    'type',
+    'consoleType',
+    'price',
+    'color',
+  ];
+       
       if (!checkBody(req.body, requireBody)) {
         return res.json({ result: false, error: "Missing or empty fields" });
+      }
+
+      if (typeof price !== "number" || isNaN(price) || price < 0) {
+        return res.status(400).json({ result: false, error: "Le prix doit être un nombre positif ou égal à zéro" });
       }
 
       const existingOption = await Option.findOne({name:req.body.name});
@@ -45,19 +67,21 @@ router.post('/addOptions',async(req,res)=>{
       if (!color) {
           return res.status(404).json({ result: "false", error: "Color not found" });
         }
-      const  optionImgFront = `/images/ASSETS/${imagePathFront}`;
-      const  optionImgSide = `/images/ASSETS/${imagePathSide}`;
-      const  optionImgBack = `/images/ASSETS/${imagePathBack}`;
+        const optionImgFront = imagePathFront ? `/images/ASSETS/${imagePathFront}` : "";
+        const optionImgSide = imagePathSide ? `/images/ASSETS/${imagePathSide}` : "";
+        const optionImgBack = imagePathBack ? `/images/ASSETS/${imagePathBack}` : "";
 
       const newOption = new Option({
-          name ,
-          description ,
-          type,
-          optionImgFront,
-          optionImgSide,
-          optionImgBack,
-          color: color._id
-      })
+        name,
+        description,
+        type,
+        consoleType,
+        price,
+        optionImgFront,
+        optionImgSide,
+        optionImgBack,
+        color: color._id, 
+      });
 
       await newOption.save();
 
@@ -93,5 +117,19 @@ router.get('/getOptionsByConsoleType',async (req, res) => {
     return res.status(500).json({ error: 'Erreur serveur' });
   }
 });
+
+
+// router.put('/updateAllOptions',async(req,res)=>{
+//   try {
+//     const result = await Option.updateMany(
+//       { price: { $exists: false } },
+//       { $set: { price: 0 } } // Remplacez 0 par le prix par défaut souhaité
+//     );
+//     console.log(`Mise à jour effectuée : ${result.nModified} documents modifiés.`);
+//   } catch (error) {
+//     console.error('Erreur lors de la mise à jour des options :', error);
+//   } 
+// })
+
 
 export default router;
