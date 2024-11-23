@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+  retrometroid-backend:
+    build: .
+    working_dir: /app
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      CONNECTION_STRING: ${CONNECTION_STRING}
+      PORT: ${PORT}
+    ports:
+      - "${PORT}:${PORT}"
+    depends_on:
+      - mongo
+    command: ["node", "src/app.js"]
+
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
