@@ -1,18 +1,20 @@
 version: "3.8"
 
 services:
-  app:
+  retrometroid-backend:
     build: .
-    working_dir: /usr/src/app
+    working_dir: /app
     volumes:
-      - .:/usr/src/app
+      - .:/app
+      - /app/node_modules
     environment:
-      - MONGO_URI=mongodb+srv://samuelzentou:ALXw7u95CEm6k4ZC@cluster0.zylx2ez.mongodb.net/RetroMetroidApp
+      CONNECTION_STRING: ${CONNECTION_STRING}
+      PORT: ${PORT}
     ports:
-      - "3000:3000"
+      - "${PORT}:${PORT}"
     depends_on:
       - mongo
-    command: ["node", "app.js"]
+    command: ["node", "src/app.js"]
 
   mongo:
     image: mongo:latest
