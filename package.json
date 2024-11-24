@@ -4,7 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "node dist/app.js",
+    "build":"tsc && cp -r src/public dist/public",
+    "start": "npm run build && node dist/app.js",
     "test": "jest"
   },
   "dependencies": {
