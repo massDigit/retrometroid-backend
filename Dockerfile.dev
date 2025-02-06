@@ -1,0 +1,21 @@
+FROM node:16
+
+WORKDIR /app
+
+# Copier les fichiers de dépendances
+COPY package*.json ./
+
+# Installer les dépendances de développement
+RUN npm install
+
+# Installer nodemon et ts-node globalement
+RUN npm install -g nodemon ts-node typescript
+
+# Copier le reste du code source
+COPY . .
+
+# Exposer le port
+EXPOSE 3000
+
+# Commande de démarrage pour le développement
+CMD ["nodemon", "--watch", "src", "--ext", "ts,json", "--exec", "ts-node", "--esm", "src/app.ts"]
