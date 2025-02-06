@@ -1,27 +1,28 @@
-import express from 'express';
+import express,{Request,Response} from 'express';
 const router = express.Router();
 
 import checkBody from '../modules/checkBody.js';  
 import Category from '../models/categories.js';
 
 
-router.post('/addCategory',async(req,res)=>{
+router.post('/addCategory',async(req:Request,res:Response):Promise<void>=>{
     
   try{
     const {name} = req.body;
     const requireBody = ["name"];
 
     if (!checkBody(req.body, requireBody)) {
-        return res.json({ result: false, error: "Missing or empty fields" });
+      res.status(400).json({ result: false, error: 'Missing or empty fields' })
+      return ;
       }
       
       
       const existingCategory = await Category.findOne({name:name});
 
       if(existingCategory){
-        return res.json({result:"false", error: "Category already exist"})  
+        res.status(409).json({result:"false", error: "Category already exist"})
+        return ;  
     }
-    console.log(name);
     const newCategory = new Category({
         name ,
     })

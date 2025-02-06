@@ -1,20 +1,23 @@
-version: "3.8"
+version: '3.8'
 
 services:
-  retrometroid-backend:
-    build: .
+  app:
+    build:
+      context: .
+      dockerfile: ${DOCKERFILE:-Dockerfile}
     working_dir: /app
+    environment:
+      CONNECTION_STRING: ${CONNECTION_STRING}
+      PORT: ${PORT:-3000}
+      NODE_ENV: ${NODE_ENV:-development}
+    ports:
+      - "${PORT:-3000}:${PORT:-3000}"
+    depends_on:
+      - mongo
+    command: ["npm", "run", "start:${NODE_ENV}"]
     volumes:
       - .:/app
       - /app/node_modules
-    environment:
-      CONNECTION_STRING: ${CONNECTION_STRING}
-      PORT: ${PORT}
-    ports:
-      - "${PORT}:${PORT}"
-    depends_on:
-      - mongo
-    command: ["node", "src/app.js"]
 
   mongo:
     image: mongo:latest

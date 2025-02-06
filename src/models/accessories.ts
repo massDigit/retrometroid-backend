@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 
 
-const accessorieSchema = mongoose.Schema({
+const accessorieSchema = new mongoose.Schema({
   name : String,
   description: String,
   price : Number,

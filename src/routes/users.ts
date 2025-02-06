@@ -1,18 +1,19 @@
-import express from 'express';
+import express,{Request,Response} from 'express';
 const router = express.Router();
 
 import checkBody from '../modules/checkBody.js';  
 import jwt from 'jsonwebtoken'; 
-import uid2 from 'uid2'; 
+import { randomBytes } from 'crypto';
 import bcrypt from 'bcrypt';  
 
 import User from '../models/users.js';  
 
-const secretKey = uid2(32);  
-const refreshSecretKey = uid2(32);
+const secretKey = randomBytes(32).toString('hex'); // Hexadécimal
+const refreshSecretKey = randomBytes(32).toString('hex');
 
 
-const generateAccessToken = (payload) => {
+
+const generateAccessToken = (payload:{ [key: string]: any }) => {
   return jwt.sign(payload, secretKey, { expiresIn: '15m' }); // 15 minutes
 };
 
@@ -24,16 +25,18 @@ const generateRefreshToken = () => {
 
 
 /* GET users listing. */
-router.get('/', async(req, res) => {
+router.get('/', async(req:Request,res:Response):Promise<void> => {
   
   try {
     const users = await User.find();
 
     if (users.length > 0) {
-      return res.json({ data: users })
+      res.json({ data: users })
+      return 
     }
 
-    return res.json({ result: false, error: "No users found" });
+    res.json({ result: false, error: "No users found" });
+    return 
   }
   catch (error) {
     res.status(500).json({ result: false, error: "Error fetching users" });
@@ -42,27 +45,30 @@ router.get('/', async(req, res) => {
 });
 
 
-router.post('/register', async(req,res) => {
+router.post('/register', async(req:Request,res:Response):Promise<void> => {
  
   const requireBody = ["username", "password", "email"];
 
   const { email, username, password } = req.body;
 
   if (!checkBody(req.body, requireBody)) {
-    return res.json({ result: false, error: "Missing or empty fields" });
+    res.status(400).json({ result: false, error: "Missing or empty fields" })
+    return;
   }
 
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
   if (!emailRegex.test(email)) {
-    return res.json({ result: false, error: "Invalid email format" });
+    res.json({ result: false, error: "Invalid email format" })
+    return 
   }
 
   try{
    
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.json({ result: false, error: "User already exists" });
+      res.json({ result: false, error: "User already exists" });
+      return 
     }
 
     const newUser = new User({
@@ -82,13 +88,14 @@ router.post('/register', async(req,res) => {
 })
 
 
-router.post('/login', async (req, res) => {
+router.post('/login', async (req:Request,res:Response):Promise<void>=> {
 
   const requireBody = ["username", "password", "email"];
   const { email, password } = req.body;
 
   if (!checkBody(req.body, requireBody)) {
-    return res.json({ result: false, error: "Missing or empty field" });
+    res.json({ result: false, error: "Missing or empty field" });
+    return 
 
   }
 
@@ -96,13 +103,19 @@ router.post('/login', async (req, res) => {
 
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(401).json({ result: false, error: "Invalid credentials" });
+      res.status(401).json({ result: false, error: "Invalid credentials" })
+      return 
+    }
+
+    if (!password || !user?.password) {
+      throw new Error('Password or user password is undefined');
     }
 
     // Vérification du mot de passe
     const passwordMatch = bcrypt.compareSync(password, user.password);
     if (!passwordMatch) {
-      return res.status(401).json({ result: false, error: "Invalid credentials" });
+      res.status(401).json({ result: false, error: "Invalid credentials" });
+      return 
     }
 
     // Génération des tokens après une connexion réussie

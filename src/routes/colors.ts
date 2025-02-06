@@ -1,4 +1,4 @@
-import express from 'express';
+import express,{Request,Response} from 'express';
 const router = express.Router();
 
 import Color from '../models/colors.js';
@@ -15,7 +15,7 @@ router.get('/',async(req,res)=>{
      if(data.length > 0 ){
          return res.status(200).json({result : true , allColor:data })
      }
-     return res.status(404).json({result:false, error:"no color Found"})
+     return res.status(404).json({result:false, error:"No colors found"})
    })
     }catch(error) {
      res.status(500).json({ result: "false", error: "Server error" });
@@ -25,7 +25,7 @@ router.get('/',async(req,res)=>{
  })
 
 
-router.post('/addColor',async(req,res)=>{
+router.post('/addColor',async(req:Request,res:Response):Promise<void>=>{
  
     try {
 
@@ -34,14 +34,17 @@ router.post('/addColor',async(req,res)=>{
         const {name} = req.body;
 
         if(!checkBody(req.body,requireBody)){
-            return res.json({ result: false, error: "Missing or empty fields" });
+            res.status(400).json({ result: false, error: "Missing or empty fields" })
+            return ;
         }
 
         const existingColor = await Color.findOne({name: name})
 
         if(existingColor){
-            return res.status(400).json({result:"false", error: "Color already exist"})
+            res.status(409).json({result:"false", error: "Color already exist"})
+            return ;
         }
+            
 
 
           const newColor = new Color({

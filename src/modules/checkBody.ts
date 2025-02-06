@@ -1,4 +1,7 @@
-function checkBody(body, keys) {
+function checkBody(
+  body: Record<string, any>, // Utilise `Record` pour représenter un objet clé-valeur
+  keys: string[]
+): boolean {
   let isValid = true;
 
   const regex = /^\s*$/; // Pour détecter les chaînes vides ou contenant uniquement des espaces

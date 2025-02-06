@@ -1,20 +1,33 @@
-# Utiliser une image de base officielle pour Node.js
-FROM node:16
+# Étape 1 : Build
+FROM node:16 AS builder
 
-# Définir le répertoire de travail dans le conteneur
+# Définir le répertoire de travail
 WORKDIR /app
 
-# Copier le fichier package.json et package-lock.json dans le conteneur
+# Copier les fichiers de dépendances
 COPY package*.json ./
 
-# Installer les dépendances
-RUN npm install
+# Installer les dépendances de production
+RUN npm install --only=production
 
-# Copier le reste du code de l'application dans le conteneur
+# Copier le reste du code source
 COPY . .
 
-# Exposer le port sur lequel l'application écoute
+# Compiler le code TypeScript
+RUN npm run build
+
+# Étape 2 : Exécution
+FROM node:16 AS runner
+
+WORKDIR /app
+
+# Copier le code compilé depuis l'étape de build
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/node_modules ./node_modules
+
+# Exposer le port
 EXPOSE 3000
 
-# Définir la commande pour démarrer l'application
-CMD ["node", "src/app.js"]
+# Démarrer l'application
+CMD ["node", "dist/app.js"]

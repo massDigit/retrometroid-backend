@@ -1,24 +1,26 @@
-import express from 'express';
+import express,{Request,Response} from 'express';
 const router = express.Router();
 
 import Accessorie from '../models/accessories.js';
 import checkBody from '../modules/checkBody.js';  
 
 
-router.post('/addAccessorie',async(req,res)=>{
+router.post('/addAccessorie',async(req:Request,res:Response):Promise<void>=>{
 
   try {
           const { name, description, price} = req.body;
           const requireBody = ["name", "price"];
 
         if (!checkBody(req.body, requireBody)) {
-          return res.json({ result: false, error: "Missing or empty fields" });
+          res.status(400).json({ result: false, error: 'Missing or empty fields' })
+          return ;
         }
 
           const existingAccessorie = await Accessorie.findOne({name:req.body.name});
 
           if(existingAccessorie){
-              return res.json({result:"false", error: "Accessorie already exist"})  
+              res.status(409).json({ result: false, error: 'Accessorie already exists' });
+              return   
           }
 
           const newAccessorie = new Accessorie({
