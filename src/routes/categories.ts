@@ -23,7 +23,6 @@ router.post('/addCategory',async(req:Request,res:Response):Promise<void>=>{
         res.status(409).json({result:"false", error: "Category already exist"})
         return ;  
     }
-    console.log(name);
     const newCategory = new Category({
         name ,
     })

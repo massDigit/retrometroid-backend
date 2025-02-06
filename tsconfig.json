@@ -1,13 +1,26 @@
 {
   "compilerOptions": {
-    "rootDir": "./src",
-    "outDir": "./dist",
-    "module": "ESNext",
-    "target": "ES2020",
-    "esModuleInterop": true,
-    "skipLibCheck": true, 
-    "moduleResolution": "node"
+    /* Propriétés de base */
+    "target": "ES2020",                            /* Cible pour la transpilation */
+    "module": "ESNext",                            /* Utiliser ESNext pour les modules */
+    "moduleResolution": "node",               /* Résolution des modules compatible avec Node.js */
+    "esModuleInterop": true,                      /* Support des imports CommonJS */
+    "forceConsistentCasingInFileNames": true,     /* Vérification des casse dans les chemins */
+    "strict": true,                               /* Active toutes les vérifications strictes */
+    "skipLibCheck": true,                         /* Ignore la vérification des fichiers .d.ts */
+
+    /* Pour faciliter les chemins et fichiers sources */
+    "rootDir": "./src",                           /* Répertoire source */
+    "outDir": "./dist",                           /* Répertoire de sortie */
+
+    /* Pour l'import JSON ou autres */
+    "resolveJsonModule": true                     /* Permet d'importer des fichiers JSON */
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "src/**/*.ts"                                 /* Inclure tous les fichiers TypeScript dans src */
+  ],
+  "exclude": [
+    "node_modules",                               /* Exclure node_modules */
+    "dist"                                       /* Exclure le dossier de sortie */
+  ]
 }

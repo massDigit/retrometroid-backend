@@ -1,35 +1,32 @@
-# Étape 1 : Builder
+# Étape 1 : Build
 FROM node:16 AS builder
 
 # Définir le répertoire de travail
 WORKDIR /app
 
-# Copier uniquement les fichiers nécessaires pour installer les dépendances
+# Copier les fichiers de dépendances
 COPY package*.json ./
 
-# Installer les dépendances de développement et de production
-RUN npm install
+# Installer les dépendances de production
+RUN npm install --only=production
 
-# Copier le reste du code source dans le conteneur
+# Copier le reste du code source
 COPY . .
 
 # Compiler le code TypeScript
-RUN npm run build && ls -la dist
+RUN npm run build
 
-
-# Étape 2 : Exécuter
+# Étape 2 : Exécution
 FROM node:16 AS runner
-
 
 WORKDIR /app
 
+# Copier le code compilé depuis l'étape de build
 COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/node_modules ./node_modules
 
-COPY package*.json ./
-
-RUN npm install --only=production
-
-# Exposer le port de l'application
+# Exposer le port
 EXPOSE 3000
 
 # Démarrer l'application

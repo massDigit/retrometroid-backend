@@ -11,7 +11,7 @@ import Category from '../models/categories.js';
 const router = express.Router();
 
 
-const validateOptionByTypeAndName = async (optionName, colorName) => {
+const validateOptionByTypeAndName = async (optionName:string, colorName:string) => {
   const color = await Color.findOne({ name: colorName });
   if (!color) {
     throw new Error(`Color ${colorName} not found`);
@@ -26,7 +26,7 @@ const validateOptionByTypeAndName = async (optionName, colorName) => {
 };
 
 
-const validateAccessoriesByName = async (accessoriesNames) => {
+const validateAccessoriesByName = async (accessoriesNames:string[]) => {
   const accessories = await Accessorie.find({ name: { $in: accessoriesNames } });
   if (accessories.length !== accessoriesNames.length) {
     throw new Error('One or more accessories not found');
@@ -124,8 +124,15 @@ router.post('/addProduct', async (req:Request,res:Response):Promise<void>=> {
 
     res.status(201).json({ result: true, message: 'Product added successfully', product: newProduct });
   } catch (error) {
-    console.error('Erreur lors de l\'ajout du produit:', error.message);
-    res.status(500).json({ result: false, error: error.message });
+    if(error instanceof Error)
+    {
+      console.error('Erreur lors de l\'ajout du produit:', error.message);
+      res.status(500).json({ result: false, error: error.message });
+    }else{
+      console.error('Erreur inconnue:', error);
+      res.status(500).json({ result: false, error: 'Erreur inconnue' });
+    }
+    
   }
 });
 

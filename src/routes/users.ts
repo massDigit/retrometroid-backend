@@ -13,7 +13,7 @@ const refreshSecretKey = randomBytes(32).toString('hex');
 
 
 
-const generateAccessToken = (payload) => {
+const generateAccessToken = (payload:{ [key: string]: any }) => {
   return jwt.sign(payload, secretKey, { expiresIn: '15m' }); // 15 minutes
 };
 
@@ -105,6 +105,10 @@ router.post('/login', async (req:Request,res:Response):Promise<void>=> {
     if (!user) {
       res.status(401).json({ result: false, error: "Invalid credentials" })
       return 
+    }
+
+    if (!password || !user?.password) {
+      throw new Error('Password or user password is undefined');
     }
 
     // Vérification du mot de passe

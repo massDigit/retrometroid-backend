@@ -7,7 +7,7 @@ router.post('/proxy/woocommerce', async (req:Request,res:Response):Promise<void>
   const orderData = req.body;
 
   // Valider les product_id avant d'envoyer la requête
-  if (!orderData.line_items.every(item => typeof item.product_id === 'number' && item.product_id > 0)) {
+  if (!orderData.line_items.every((item: { product_id: number })=> typeof item.product_id === 'number' && item.product_id > 0)) {
     res.status(400).json({ error: 'Invalid product_id in line_items' });
     return 
   }
